@@ -5,27 +5,31 @@ public class MainApp{
         Scanner scanner = new Scanner(System.in);
         
         try{
-            message();
-            int choix = obtenirChoix(scanner);
-            System.out.println(choix);
-            if(choix == 1){
-                int annee = verifieAnnee(scanner);
-                boolean resultat = calculBissextile(annee);
-                if(resultat){
-                    System.out.println("L'année " + annee + " est bissextile.");
+            int continuer;
+            do{
+                message();
+                int choix = obtenirChoix(scanner);
+                System.out.println(choix);
+                if(choix == 1){
+                    int annee = verifieAnnee(scanner);
+                    boolean resultat = calculBissextile(annee);
+                    if(resultat){
+                        System.out.println("L'année " + annee + " est bissextile.");
+                    }else{
+                        System.out.println("L'année " + annee + " n'est pas bissextile.");
+                    }
                 }else{
-                    System.out.println("L'année " + annee + " n'est pas bissextile.");
+                    int annee = verifieAnnee(scanner);
+                    int mois = valideMois(scanner);
+                    int jour = verifieJour(scanner, mois, annee);
+                    System.out.println("Votre date est: " + jour + "-" + mois + "-" + annee);
+                    int h = rechercheJour(jour, mois, annee);
+                    String dateTrouvée = jourDate(h);
+                    System.out.println("Et c'est un " + dateTrouvée);
                 }
-                
-            }else{
-                int annee = verifieAnnee(scanner);
-                int mois = valideMois(scanner);
-                int jour = verifieJour(scanner, mois, annee);
-                System.out.println("Votre date est: " + jour + "-" + mois + "-" + annee);
-                int h = rechercheJour(jour, mois, annee);
-                String dateTrouvée = jourDate(h);
-                System.out.println("Et c'est un " + dateTrouvée);
-            }
+                continuer = demander(scanner);
+            }while(continuer == 1);
+            
         }finally{
             scanner.close();
         }    
@@ -125,7 +129,7 @@ public class MainApp{
         while(jourAccepte < 1 || jourAccepte > tab[mois - 1]){
             errorMessage("jour");
             while(!scanner.hasNextInt()){
-                errorMessage(" du jour");
+                errorMessage("du jour");
                 scanner.next();
             }
             jourAccepte = scanner.nextInt();
@@ -141,7 +145,7 @@ public class MainApp{
             mois = 14;
             annee--;
         }   
-        // variables pour la formule
+        // Variables pour la formule
         int q = jour;
         int m = mois;
         int a = annee;
@@ -160,6 +164,25 @@ public class MainApp{
     public static String jourDate(int h){
         String[] jour = {"Samedi", "Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi"};
         return jour[h];
+    }
+
+    public static int demander(Scanner scanner){
+        System.out.println("Saisissez 1 pour continuer ou 2 pour arrêter.");
+        int resultat;
+        while(!scanner.hasNextInt()){
+            errorMessage("de 1 pour continuer ou 2 pour arrêter");
+            scanner.next();
+        }
+        resultat = scanner.nextInt();
+        while(resultat != 1 && resultat != 2){
+            errorMessage("de 1 pour continuer ou 2 pour arrêter");
+            while(!scanner.hasNextInt()){
+                errorMessage("de 1 pour continuer ou 2 pour arrêter");
+                scanner.next();
+            }
+            resultat = scanner.nextInt();
+        }
+        return resultat;
     }
 }
 
